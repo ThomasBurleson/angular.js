@@ -97,7 +97,7 @@ function TimelineRegistry( $rootElement, $$qAnimate, $log ) {
       }
 
       function prepareLeaf( it ) {
-        var unionOptions = angular.extend( {}, it.options, options);
+        var unionOptions = angular.extend( it.options, { duration: it.duration, position:it.position }, options);
         return angular.extend( it, driver( it.element, unionOptions ));
       }
 
