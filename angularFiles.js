@@ -37,6 +37,7 @@ var angularFiles = {
     'src/ng/sniffer.js',
     'src/ng/templateRequest.js',
     'src/ng/testability.js',
+    'src/ng/timeline.js',
     'src/ng/timeout.js',
     'src/ng/urlUtils.js',
     'src/ng/window.js',
@@ -86,10 +87,23 @@ var angularFiles = {
 
   'angularModules': {
     'ngAnimate': [
-      'src/ngAnimate/animate.js'
+      'src/ngAnimate/shared.js',
+      'src/ngAnimate/animateCss.js',
+      'src/ngAnimate/animateCssDriver.js',
+      'src/ngAnimate/animateJsDriver.js',
+      'src/ngAnimate/module.js'
     ],
     'ngCookies': [
       'src/ngCookies/cookies.js'
+    ],
+    'ngTimeline': [
+      'src/ngTimeline/ngStepDirective.js',
+      'src/ngTimeline/ngTimelineDirective.js',
+      'src/ngTimeline/timelineController.js',
+      'src/ngTimeline/timelinePlayhead.js',
+      'src/ngTimeline/timelineRegistry.js',
+      'src/ngTimeline/shared.js',
+      'src/ngTimeline/module.js'
     ],
     'ngMessages': [
       'src/ngMessages/messages.js'
@@ -145,6 +159,7 @@ var angularFiles = {
     'test/auto/*.js',
     'test/ng/**/*.js',
     'test/ngAnimate/*.js',
+    'test/ngTimeline/*.js',
     'test/ngMessages/*.js',
     'test/ngCookies/*.js',
     'test/ngResource/*.js',
@@ -209,6 +224,7 @@ var angularFiles = {
 
 angularFiles['angularSrcModules'] = [].concat(
   angularFiles['angularModules']['ngAnimate'],
+  angularFiles['angularModules']['ngTimeline'],
   angularFiles['angularModules']['ngMessages'],
   angularFiles['angularModules']['ngCookies'],
   angularFiles['angularModules']['ngResource'],

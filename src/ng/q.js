@@ -215,7 +215,7 @@
 function $QProvider() {
 
   this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
-    return qFactory(function(callback) {
+    return qFactory(angular.noop, function(callback) {
       $rootScope.$evalAsync(callback);
     }, $exceptionHandler);
   }];
@@ -223,9 +223,26 @@ function $QProvider() {
 
 function $$QProvider() {
   this.$get = ['$browser', '$exceptionHandler', function($browser, $exceptionHandler) {
-    return qFactory(function(callback) {
+    return qFactory(angular.noop, function(callback) {
       $browser.defer(callback);
     }, $exceptionHandler);
+  }];
+}
+
+function $$QAnimateProvider() {
+  this.$get = ['$$rAF', '$exceptionHandler', function($$rAF, $exceptionHandler) {
+    return qFactory(
+      function() {
+        var self = this;
+        $$rAF(function() {
+          self.$$rafCleared = true;
+        });
+      },
+      function(callback) {
+        this.$$rafCleared
+          ? callback()
+          : $$rAF(callback);
+      }, $exceptionHandler);
   }];
 }
 
@@ -237,8 +254,12 @@ function $$QProvider() {
  *     debugging purposes.
  * @returns {object} Promise manager.
  */
-function qFactory(nextTick, exceptionHandler) {
+function qFactory(initFn, nextTick, exceptionHandler) {
   var $qMinErr = minErr('$q', TypeError);
+
+  var promiseScope = {};
+  nextTick = bind(promiseScope, nextTick);
+
   function callOnce(self, resolveFn, rejectFn) {
     var called = false;
     function wrap(fn) {
@@ -263,8 +284,15 @@ function qFactory(nextTick, exceptionHandler) {
    * @returns {Deferred} Returns a new instance of deferred.
    */
   var defer = function() {
+    initFn.apply(promiseScope);
     return new Deferred();
   };
+
+  function promise(fn) {
+    var defered = defer();
+    fn(defered);
+    return defered.promise;
+  }
 
   function Promise() {
     this.$$state = { status: 0 };
